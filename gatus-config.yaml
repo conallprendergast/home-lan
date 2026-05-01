@@ -1,0 +1,89 @@
+storage:
+  type: sqlite
+  path: /var/lib/gatus/data.db  # Persists your uptime graphs between Git pulls
+
+ui:
+  title: "tc-01 Core Monitor"
+  header: "Home Infrastructure Status"
+
+endpoints:
+  # 1. AdGuard Home (Core DNS)
+  - name: "AdGuard Home"
+    group: "Core Services"
+    url: "http://adguard.lan"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 500"
+
+  # 2. Syncthing (TCP Check)
+  # We check the Web UI for availability, but also the Sync port
+  - name: "Syncthing UI"
+    group: "Data Sync"
+    url: "http://syncthing.lan:8384"
+    interval: 2m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: "Syncthing Sync Port"
+    group: "Data Sync"
+    url: "tcp://syncthing.lan:22000"
+    interval: 5m
+    conditions:
+      - "[CONNECTED] == true"
+
+  # 3. Tailscale (Internal node check)
+  # Since it's an exit node, we check its internal tailnet presence
+  - name: "Tailscale Node"
+    group: "Network"
+    url: "icmp://tailscale.lan"
+    interval: 1m
+    conditions:
+      - "[CONNECTED] == true"
+
+  # 4. FileBrowser (Quantum or Standard)
+  - name: "FileBrowser"
+    group: "Storage"
+    url: "http://filebrowser.lan"
+    interval: 2m
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY] == pat(*FileBrowser*)" # Verifies the page actually loaded
+
+  # 5. Netboot.xyz
+  - name: "Netboot UI"
+    group: "Deployment"
+    url: "http://netboot.lan:3000" # The Web UI port
+    interval: 5m
+    conditions:
+      - "[STATUS] == 200"
+
+  # 6. The "Internet" Check
+  - name: "Internet Gateway (Cloudflare)"
+    group: "External"
+    url: "https://1.1.1.1"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  # 6. The "Internet" Check
+  - name: "Britebin"
+    group: "Britebin"
+    url: "https://britebin.ie"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: "Britebin API (48998)"
+    group: "Data Sync"
+    url: "tcp://api.britebin.ie:48998"
+    interval: 5m
+    conditions:
+      - "[CONNECTED] == true"
+
+  - name: "Britebin API (48999)"
+    group: "Data Sync"
+    url: "tcp://api.britebin.ie:48999"
+    interval: 5m
+    conditions:
+      - "[CONNECTED] == true"
