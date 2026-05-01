@@ -69,7 +69,6 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
 
-  # 6. The "Internet" Check
   - name: "Britebin"
     group: "Britebin"
     url: "https://britebin.ie"
@@ -78,14 +77,14 @@ endpoints:
       - "[STATUS] == 200"
 
   - name: "Britebin API (48998)"
-    group: "Data Sync"
+    group: "Britebin"
     url: "tcp://api.britebin.ie:48998"
     interval: 5m
     conditions:
       - "[CONNECTED] == true"
 
   - name: "Britebin API (48999)"
-    group: "Data Sync"
+    group: "Britebin"
     url: "tcp://api.britebin.ie:48999"
     interval: 5m
     conditions:
