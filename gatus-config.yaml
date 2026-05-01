@@ -20,8 +20,11 @@ endpoints:
   # We check the Web UI for availability, but also the Sync port
   - name: "Syncthing UI"
     group: "Data Sync"
-    url: "http://syncthing.lan:8384"
+    url: "https://syncthing.lan:8384"
     interval: 2m
+    client:
+      follow-redirects: true
+      insecure: true
     conditions:
       - "[STATUS] == 200"
 
@@ -53,7 +56,7 @@ endpoints:
   # 5. Netboot.xyz
   - name: "Netboot UI"
     group: "Deployment"
-    url: "http://netboot.lan:3000" # The Web UI port
+    url: "http://netboot-xyz.lan" # The Web UI port
     interval: 5m
     conditions:
       - "[STATUS] == 200"
